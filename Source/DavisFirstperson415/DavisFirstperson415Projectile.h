@@ -22,8 +22,32 @@ class ADavisFirstperson415Projectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	//Reference to our staticMesh ballMesh
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* ballMesh;
+
+	//Reference to Umaterial baseMat
+	UPROPERTY(EditAnywhere)
+	UMaterial* baseMat;
+
+	//calls random color
+	UPROPERTY()
+	FLinearColor randColor;
+
+	//set up Projectile material
+	UPROPERTY(EditAnywhere)
+	UMaterialInterface* projMat;
+
+	//set up dynamic material instance dmiMat
+	UPROPERTY()
+	UMaterialInstanceDynamic* dmiMat;
+
 public:
 	ADavisFirstperson415Projectile();
+	
+	//Called when projectile is spawned
+protected:	
+	virtual void BeginPlay();
 
 	/** called when projectile hits something */
 	UFUNCTION()

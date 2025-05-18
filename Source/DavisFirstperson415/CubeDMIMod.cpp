@@ -42,10 +42,7 @@ void ACubeDMIMod::BeginPlay()
 	{
 		cubeMesh->SetMaterial(0, dmiMat);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Base Material is not valid"));
-	}
+	
 }
 
 // Called every frame
