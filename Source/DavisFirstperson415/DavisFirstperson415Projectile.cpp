@@ -19,7 +19,7 @@ ADavisFirstperson415Projectile::ADavisFirstperson415Projectile()
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	CollisionComp->CanCharacterStepUpOn = ECB_No;
 
-	ballMesh = CreateDefaultSubobject<UStaticMeshComponent>("BallMesh");
+	ballMesh = CreateDefaultSubobject<UStaticMeshComponent>("Ball Mesh");
 
 	// Set as root component
 	RootComponent = CollisionComp;
@@ -46,12 +46,15 @@ void ADavisFirstperson415Projectile::BeginPlay()
 	randColor = FLinearColor(UKismetMathLibrary::RandomFloatInRange(0.f, 1.f), UKismetMathLibrary::RandomFloatInRange(0.f, 1.f), UKismetMathLibrary::RandomFloatInRange(0.f, 1.f), 1.f);
 
 	dmiMat = UMaterialInstanceDynamic::Create(projMat, this);
+
 	ballMesh->SetMaterial(0, dmiMat);
 
 	dmiMat->SetVectorParameterValue("ProjColor", randColor);
 	
 }
 
+
+//On hit function
 void ADavisFirstperson415Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
@@ -73,7 +76,7 @@ void ADavisFirstperson415Projectile::OnHit(UPrimitiveComponent* HitComp, AActor*
 		auto MatInstance = Decal->CreateDynamicMaterialInstance();
 
 		//setting vector parameter values for color and frame
-		MatInstance->SetVectorParameterValue("DMIProjColor", randColor);
+		MatInstance->SetVectorParameterValue("Color", randColor);
 		MatInstance->SetScalarParameterValue("FrameNum", frameNum);
 
 		
