@@ -75,7 +75,7 @@ void ADavisFirstperson415Projectile::OnHit(UPrimitiveComponent* HitComp, AActor*
         if (colorP)
         {
             UNiagaraComponent* particleComp = UNiagaraFunctionLibrary::SpawnSystemAttached(colorP, HitComp, NAME_None, FVector(-20.f, 0.f, 0.f), FRotator(0.f), EAttachLocation::KeepRelativeOffset, true);
-            particleComp->SetNiagaraVariableLinearColor(FString("RandColor"), randColor);
+            particleComp->SetNiagaraVariableLinearColor(FString("RandomColor"), randColor);
             ballMesh->DestroyComponent();
             CollisionComp->BodyInstance.SetCollisionProfileName("NoCollision");
         }
