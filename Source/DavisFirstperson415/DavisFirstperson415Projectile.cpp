@@ -4,8 +4,12 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/DecalComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetMathLibrary.h" // Corrected include path for UKismetMathLibrary
 #include "Kismet/GameplayStatics.h"
+//including function library to allow us to call the Niagara spawn function
+#include "NiagaraFunctionLibrary.h"
+//this reference allows us to cast to it 
+#include "NiagaraComponent.h"
 
 ADavisFirstperson415Projectile::ADavisFirstperson415Projectile() 
 {
@@ -57,28 +61,35 @@ void ADavisFirstperson415Projectile::BeginPlay()
 //On hit function
 void ADavisFirstperson415Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
-	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+    // Only add impulse and destroy projectile if we hit a physics
+    if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+    {
+        OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
-		Destroy();
-	}
+        Destroy();
+    }
 
-	//if projectile hits something other than a physics object, spawn a decal
-	if (OtherActor != nullptr)
-	{
-		float frameNum = UKismetMathLibrary::RandomFloatInRange(0.f, 3.f); //random float in range for frame number	
-		//auto sets the variable automatically
-		//create a decal at the hit location
-		auto Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), baseMat, FVector(UKismetMathLibrary::RandomFloatInRange(20.f, 40.f)), Hit.Location, Hit.Normal.Rotation (), 0.f);
-		//creating a dynamic material instance
-		auto MatInstance = Decal->CreateDynamicMaterialInstance();
+    // If projectile hits something other than a physics object, spawn a decal
+    if (OtherActor != nullptr)
+    {
+        if (colorP)
+        {
+            UNiagaraComponent* particleComp = UNiagaraFunctionLibrary::SpawnSystemAttached(colorP, HitComp, NAME_None, FVector(-20.f, 0.f, 0.f), FRotator(0.f), EAttachLocation::KeepRelativeOffset, true);
+            particleComp->SetNiagaraVariableLinearColor(FString("RandColor"), randColor);
+            ballMesh->DestroyComponent();
+            CollisionComp->BodyInstance.SetCollisionProfileName("NoCollision");
+        }
 
-		//setting vector parameter values for color and frame
-		MatInstance->SetVectorParameterValue("Color", randColor);
-		MatInstance->SetScalarParameterValue("FrameNum", frameNum);
+        float frameNum = UKismetMathLibrary::RandomFloatInRange(0.f, 3.f); // Random float in range for frame number
+        // Create a decal at the hit location
+        auto Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), baseMat, FVector(UKismetMathLibrary::RandomFloatInRange(20.f, 40.f)), Hit.Location, Hit.Normal.Rotation(), 0.f);
+        // Creating a dynamic material instance
+        auto MatInstance = Decal->CreateDynamicMaterialInstance();
 
-		
-	}
+        // setting vector parameter values for color and frame
+        MatInstance->SetVectorParameterValue("Color", randColor);
+        MatInstance->SetScalarParameterValue("FrameNum", frameNum);
+
+
+    }
 }

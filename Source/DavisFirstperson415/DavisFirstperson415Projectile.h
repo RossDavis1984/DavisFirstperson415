@@ -8,6 +8,8 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+//added forward declaration for Niagara System
+class UNiagaraSystem;
 
 UCLASS(config=Game)
 class ADavisFirstperson415Projectile : public AActor
@@ -41,6 +43,12 @@ class ADavisFirstperson415Projectile : public AActor
 	//set up dynamic material instance dmiMat
 	UPROPERTY()
 	UMaterialInstanceDynamic* dmiMat;
+
+	//included UPROPERTY for Niagara System allowing us to referencethe system through code
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* colorP;
+
+
 
 public:
 	ADavisFirstperson415Projectile();

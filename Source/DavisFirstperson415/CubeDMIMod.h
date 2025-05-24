@@ -7,6 +7,10 @@
 #include "Components/BoxComponent.h"
 #include "CubeDMIMod.generated.h"
 
+
+//included forward declaration of Niagara System
+class UNiagaraSystem;
+
 UCLASS()
 class DAVISFIRSTPERSON415_API ACubeDMIMod : public AActor
 {
@@ -38,6 +42,10 @@ public:
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* dmiMat;
+
+	//included UPROPERTY for Niagara System allowing us to referencethe system through code
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* colorP;
 
 	//Overlap event
 	UFUNCTION()
