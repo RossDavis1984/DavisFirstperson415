@@ -10,6 +10,7 @@
 #include "NiagaraFunctionLibrary.h"
 //this reference allows us to cast to it 
 #include "NiagaraComponent.h"
+#include "PerlinProcTerrain.h"
 
 ADavisFirstperson415Projectile::ADavisFirstperson415Projectile() 
 {
@@ -88,8 +89,12 @@ void ADavisFirstperson415Projectile::OnHit(UPrimitiveComponent* HitComp, AActor*
 
         // setting vector parameter values for color and frame
         MatInstance->SetVectorParameterValue("Color", randColor);
-        MatInstance->SetScalarParameterValue("FrameNum", frameNum);
+		MatInstance->SetScalarParameterValue("FrameNum", frameNum);
 
-
+		APerlinProcTerrain* procTerrain = Cast<APerlinProcTerrain>(OtherActor);
+		if (procTerrain)
+		{
+			procTerrain->AlterMesh(Hit.ImpactPoint);
+		}
     }
 }
